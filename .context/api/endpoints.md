@@ -51,11 +51,13 @@ Register a new user account.
 // 400 Bad Request - Validation Error
 {
   "error": {
-    "code": "validation_failed",
-    "message": "Request validation failed",
+    "code": "VAL_INVALID_INPUT",
+    "message": "Validation failed",
     "details": {
-      "email": "Invalid email format",
-      "password": "Password must be at least 12 characters"
+      "fields": [
+        { "field": "email", "message": "Invalid email format" },
+        { "field": "password", "message": "Must be at least 12 characters" }
+      ]
     }
   }
 }
@@ -63,8 +65,8 @@ Register a new user account.
 // 409 Conflict - Email Already Exists
 {
   "error": {
-    "code": "duplicate_email",
-    "message": "Email already exists"
+    "code": "USER_EMAIL_EXISTS",
+    "message": "Email already registered"
   }
 }
 ```
@@ -103,7 +105,7 @@ Authenticate user and receive access token.
 // 401 Unauthorized - Invalid Credentials
 {
   "error": {
-    "code": "invalid_credentials",
+    "code": "AUTH_INVALID_CREDENTIALS",
     "message": "Invalid email or password"
   }
 }
@@ -111,9 +113,11 @@ Authenticate user and receive access token.
 // 429 Too Many Requests - Rate Limited
 {
   "error": {
-    "code": "rate_limit_exceeded",
-    "message": "Too many login attempts, try again later",
-    "retry_after": 60
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Too many requests",
+    "details": {
+      "retryAfter": 60
+    }
   }
 }
 ```
@@ -235,7 +239,7 @@ Change user password.
 // 400 Bad Request - Invalid Current Password
 {
   "error": {
-    "code": "invalid_current_password",
+    "code": "AUTH_INVALID_CREDENTIALS",
     "message": "Current password is incorrect"
   }
 }
@@ -431,14 +435,19 @@ All error responses follow a consistent structure:
 ```
 
 ### Common Error Codes
-- `validation_failed`: Request validation errors
-- `unauthorized`: Authentication required
-- `forbidden`: Insufficient permissions
-- `not_found`: Resource not found
-- `conflict`: Resource already exists
-- `rate_limit_exceeded`: Too many requests
-- `internal_error`: Server error
-- `service_unavailable`: Service temporarily unavailable
+
+See [errors.md](../errors.md) for the complete catalog. Common codes include:
+
+| Code | Description |
+|------|-------------|
+| `VAL_INVALID_INPUT` | Request validation errors |
+| `AUTH_REQUIRED` | Authentication required |
+| `AUTH_FORBIDDEN` | Insufficient permissions |
+| `RES_NOT_FOUND` | Resource not found |
+| `RES_ALREADY_EXISTS` | Resource already exists |
+| `RATE_LIMIT_EXCEEDED` | Too many requests |
+| `SYS_INTERNAL_ERROR` | Server error |
+| `SYS_SERVICE_UNAVAILABLE` | Service temporarily unavailable |
 
 ## Rate Limiting
 
@@ -485,5 +494,16 @@ All list endpoints support cursor-based pagination:
 ```
 
 ---
+
+## Related Documentation
+
+| Document | Relationship |
+|----------|--------------|
+| [headers.md](./headers.md) | HTTP headers and CORS |
+| [examples.md](./examples.md) | Client implementations and usage |
+| [../auth/overview.md](../auth/overview.md) | Authentication flow details |
+| [../database/models.md](../database/models.md) | Data models for request/response |
+| [../errors.md](../errors.md) | Complete error codes catalog |
+| [../architecture/patterns.md](../architecture/patterns.md) | Handler implementation patterns |
 
 **Next**: Review [headers.md](./headers.md) for HTTP headers documentation and [examples.md](./examples.md) for comprehensive usage examples.

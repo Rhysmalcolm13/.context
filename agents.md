@@ -60,6 +60,64 @@ For specific implementation tasks, combine relevant domain files:
 .context/database/schema.md + .context/database/models.md + .context/database/migrations.md
 ```
 
+## Pre-Built Prompts
+
+The `.context/prompts/` directory contains ready-to-use prompts for common tasks. Select the appropriate prompt based on your task:
+
+| Task | Prompt File | When to Use |
+|------|-------------|-------------|
+| Adding API endpoints | `prompts/new-endpoint.md` | Creating new REST endpoints |
+| Implementing features | `prompts/new-feature.md` | Building new functionality |
+| Debugging issues | `prompts/fix-bug.md` | Investigating and fixing bugs |
+| Refactoring code | `prompts/refactor.md` | Restructuring existing code |
+| Code review | `prompts/review.md` | Reviewing PRs or code changes |
+| Security audit | `prompts/security-audit.md` | Checking for vulnerabilities |
+| Performance work | `prompts/performance.md` | Optimizing speed/resources |
+| Writing docs | `prompts/documentation.md` | Creating documentation |
+
+**Usage**: Copy the prompt content, fill in the placeholders, and include relevant `.context/` files as specified in each prompt.
+
+## Token Budget Optimization
+
+Different AI tools have different context limits. Here's how to optimize your context usage:
+
+### Minimal Context (~2K-4K tokens)
+For quick questions or simple changes, include only:
+```bash
+.context/substrate.md          # Overview only (first 50 lines)
+.context/ai-rules.md           # Core constraints
+```
+
+### Standard Context (~8K-15K tokens)
+For typical development tasks:
+```bash
+.context/substrate.md          # Full file
+.context/ai-rules.md           # Core constraints
+.context/glossary.md           # Terminology
+[one domain folder]            # e.g., auth/*.md OR api/*.md
+```
+
+### Comprehensive Context (~20K-30K tokens)
+For complex features spanning multiple domains:
+```bash
+.context/substrate.md
+.context/ai-rules.md
+.context/anti-patterns.md
+.context/architecture/*.md
+[relevant domain folders]
+```
+
+### Priority Order
+When you need to trim context, keep files in this priority:
+1. **ai-rules.md** - Non-negotiable constraints
+2. **substrate.md** - Project orientation
+3. **Domain overview** - e.g., `auth/overview.md` for auth work
+4. **patterns.md** - Code patterns to follow
+5. **examples** - Reference implementations
+6. **Decisions (ADRs)** - Historical context
+
+**Tip**: For iterative work, load comprehensive context once and ask the AI to "remember" key points, then use minimal context for follow-up questions.
+
 ## Agent Prompt Patterns
 
 ### Code Generation Prompts

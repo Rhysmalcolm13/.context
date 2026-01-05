@@ -126,3 +126,15 @@ When adding a new error code:
 4. Write clear, actionable message
 5. Document when it occurs
 6. Add to error constants in code
+
+---
+
+## Related Documentation
+
+| Document | Relationship |
+|----------|--------------|
+| [glossary.md](./glossary.md) | Error code prefix definitions |
+| [api/endpoints.md](./api/endpoints.md) | Endpoint-specific error examples |
+| [api/examples.md](./api/examples.md) | Error handling in client code |
+| [architecture/patterns.md](./architecture/patterns.md) | Error handling implementation patterns |
+| [auth/security.md](./auth/security.md) | Security-related error handling |

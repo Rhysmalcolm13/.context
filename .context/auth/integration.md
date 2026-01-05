@@ -63,7 +63,7 @@ func authMiddleware(authService AuthService) func(http.Handler) http.Handler {
                 if errors.As(err, &authErr) {
                     writeAuthError(w, authErr.Code, authErr.Message)
                 } else {
-                    writeAuthError(w, "token_validation_failed", "Token validation failed")
+                    writeAuthError(w, "AUTH_INVALID_TOKEN", "Token validation failed")
                 }
                 return
             }
@@ -105,12 +105,12 @@ func requirePermission(permission string) func(http.Handler) http.Handler {
         return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
             userCtx, ok := r.Context().Value(UserContextKey).(*UserContext)
             if !ok {
-                writeAuthError(w, "missing_user_context", "User context not found")
+                writeAuthError(w, "AUTH_REQUIRED", "User context not found")
                 return
             }
-            
+
             if !userCtx.HasPermission(permission) {
-                writeAuthError(w, "insufficient_permissions", "Insufficient permissions for this action")
+                writeAuthError(w, "AUTH_FORBIDDEN", "Insufficient permissions for this action")
                 return
             }
             
@@ -160,7 +160,7 @@ func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
     var req LoginRequest
     if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
         h.writeError(w, &ValidationError{
-            Code:    "invalid_request_body",
+            Code:    "VAL_INVALID_INPUT",
             Message: "Invalid JSON in request body",
         })
         return
@@ -168,8 +168,8 @@ func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
     
     if err := h.validator.Validate(req); err != nil {
         h.writeError(w, &ValidationError{
-            Code:    "validation_failed",
-            Message: "Request validation failed",
+            Code:    "VAL_INVALID_INPUT",
+            Message: "Validation failed",
             Details: err,
         })
         return
@@ -184,7 +184,7 @@ func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
         } else {
             h.logger.Error("Authentication failed", "error", err, "email", req.Email)
             h.writeError(w, &AuthError{
-                Code:    "authentication_failed",
+                Code:    "AUTH_INVALID_CREDENTIALS",
                 Message: "Authentication failed",
             })
         }
@@ -236,7 +236,7 @@ func (h *AuthHandler) HandleRefreshToken(w http.ResponseWriter, r *http.Request)
     
     if refreshToken == "" {
         h.writeError(w, &AuthError{
-            Code:    "missing_refresh_token",
+            Code:    "AUTH_REQUIRED",
             Message: "Refresh token is required",
         })
         return
@@ -251,7 +251,7 @@ func (h *AuthHandler) HandleRefreshToken(w http.ResponseWriter, r *http.Request)
         } else {
             h.logger.Error("Token refresh failed", "error", err)
             h.writeError(w, &AuthError{
-                Code:    "token_refresh_failed",
+                Code:    "AUTH_INVALID_TOKEN",
                 Message: "Failed to refresh token",
             })
         }
@@ -429,25 +429,25 @@ func (e *AuthError) Error() string {
 
 var (
     ErrInvalidCredentials = &AuthError{
-        Code:       "invalid_credentials",
+        Code:       "AUTH_INVALID_CREDENTIALS",
         Message:    "Invalid email or password",
         StatusCode: http.StatusUnauthorized,
     }
-    
+
     ErrTokenExpired = &AuthError{
-        Code:       "token_expired",
+        Code:       "AUTH_EXPIRED_TOKEN",
         Message:    "Access token has expired",
         StatusCode: http.StatusUnauthorized,
     }
-    
+
     ErrTokenInvalid = &AuthError{
-        Code:       "token_invalid",
+        Code:       "AUTH_INVALID_TOKEN",
         Message:    "Access token is invalid",
         StatusCode: http.StatusUnauthorized,
     }
-    
+
     ErrInsufficientPermissions = &AuthError{
-        Code:       "insufficient_permissions",
+        Code:       "AUTH_FORBIDDEN",
         Message:    "Insufficient permissions for this action",
         StatusCode: http.StatusForbidden,
     }

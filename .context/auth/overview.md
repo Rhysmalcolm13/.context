@@ -354,4 +354,16 @@ func AuthMiddleware(authService AuthService) func(http.Handler) http.Handler {
 
 ---
 
+## Related Documentation
+
+| Document | Relationship |
+|----------|--------------|
+| [integration.md](./integration.md) | Framework integration patterns |
+| [security.md](./security.md) | Security measures and threat mitigation |
+| [../decisions/001-jwt-authentication.md](../decisions/001-jwt-authentication.md) | ADR explaining JWT choice |
+| [../architecture/patterns.md](../architecture/patterns.md) | Error handling patterns used here |
+| [../api/endpoints.md](../api/endpoints.md) | Auth endpoints documentation |
+| [../errors.md](../errors.md) | AUTH_* error codes |
+| [../glossary.md](../glossary.md) | Term definitions (Session, Permission, Role) |
+
 **Next**: Review [integration.md](./integration.md) for framework integration patterns and [security.md](./security.md) for comprehensive security measures.

@@ -57,9 +57,12 @@ This file defines project-specific terminology. AI should use these terms consis
 |--------|--------|---------|
 | `AUTH_` | Authentication errors | `AUTH_INVALID_TOKEN` |
 | `USER_` | User management errors | `USER_NOT_FOUND` |
-| `VAL_` | Validation errors | `VAL_INVALID_EMAIL` |
-| `DB_` | Database errors | `DB_CONNECTION_FAILED` |
-| `API_` | API/HTTP errors | `API_RATE_LIMITED` |
+| `VAL_` | Validation errors | `VAL_INVALID_FORMAT` |
+| `RES_` | Resource errors | `RES_NOT_FOUND` |
+| `RATE_` | Rate limiting errors | `RATE_LIMIT_EXCEEDED` |
+| `SYS_` | System/internal errors | `SYS_INTERNAL_ERROR` |
+
+See [errors.md](./errors.md) for the complete error codes catalog.
 
 ---
 

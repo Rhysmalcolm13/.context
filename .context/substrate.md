@@ -208,6 +208,43 @@ Concrete usage patterns.
 - **Technical Debt Management**: Documented trade-offs inform future refactoring decisions
 - **Team Scalability**: Documentation scales knowledge across growing teams
 
+## Recommended Reading Order
+
+Different roles need different paths through this documentation:
+
+### For New Team Members
+1. **substrate.md** (this file) - Orientation
+2. **[architecture/overview.md](./architecture/overview.md)** - System design
+3. **[glossary.md](./glossary.md)** - Project terminology
+4. **[guidelines.md](./guidelines.md)** - Development workflow
+5. **Domain-specific files** based on your first task
+
+### For AI Tools / Code Generation
+1. **[ai-rules.md](./ai-rules.md)** - Hard constraints (read first, always)
+2. **substrate.md** (this file) - Project orientation
+3. **[glossary.md](./glossary.md)** - Use correct terminology
+4. **[anti-patterns.md](./anti-patterns.md)** - What not to do
+5. **Relevant domain files** for the specific task
+
+### For Implementing Features
+1. **[ai-rules.md](./ai-rules.md)** - Constraints
+2. **[architecture/patterns.md](./architecture/patterns.md)** - Code patterns
+3. **Relevant domain overview** (e.g., `auth/overview.md`)
+4. **[errors.md](./errors.md)** - Error handling
+5. **Relevant domain details** as needed
+
+### For Security-Related Work
+1. **[auth/security.md](./auth/security.md)** - Security model
+2. **[auth/overview.md](./auth/overview.md)** - Auth flows
+3. **[boundaries.md](./boundaries.md)** - What not to touch
+4. **[decisions/001-jwt-authentication.md](./decisions/001-jwt-authentication.md)** - Auth decisions
+
+### For Debugging / Troubleshooting
+1. **[errors.md](./errors.md)** - Error codes catalog
+2. **Relevant domain files** for the affected area
+3. **[debt.md](./debt.md)** - Known issues that might be related
+4. **[architecture/patterns.md](./architecture/patterns.md)** - Expected behavior
+
 ## Getting Started
 
 1. **Read This File**: Understand the methodology and navigation

@@ -164,8 +164,8 @@ Retry-After: 300
 
 {
   "error": {
-    "code": "rate_limit_exceeded",
-    "message": "Rate limit exceeded. Try again in 5 minutes."
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Too many requests"
   }
 }
 ```
@@ -373,25 +373,25 @@ type RequiredHeaders struct {
 func validateHeaders(r *http.Request, required RequiredHeaders) error {
     if required.ContentType && r.Header.Get("Content-Type") == "" {
         return &HeaderError{
-            Code:    "missing_content_type",
+            Code:    "VAL_MISSING_FIELD",
             Message: "Content-Type header is required",
         }
     }
-    
+
     if required.Authorization && r.Header.Get("Authorization") == "" {
         return &HeaderError{
-            Code:    "missing_authorization",
+            Code:    "AUTH_REQUIRED",
             Message: "Authorization header is required",
         }
     }
-    
+
     if required.UserAgent && r.Header.Get("User-Agent") == "" {
         return &HeaderError{
-            Code:    "missing_user_agent",
+            Code:    "VAL_MISSING_FIELD",
             Message: "User-Agent header is required",
         }
     }
-    
+
     return nil
 }
 ```

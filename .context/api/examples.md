@@ -4,6 +4,8 @@ This document provides comprehensive examples of [Your Project Name] API usage, 
 
 ## Authentication Flow Examples
 
+> **Security Note**: All tokens, passwords, and credentials in these examples are placeholders for documentation purposes. Never commit real secrets to version control. Use environment variables and secret management tools in production.
+
 ### Complete Registration and Login Flow
 
 #### 1. User Registration
@@ -195,12 +197,14 @@ curl -X POST https://api.yourproject.com/v1/auth/register \
 ```json
 {
   "error": {
-    "code": "validation_failed",
-    "message": "Request validation failed",
+    "code": "VAL_INVALID_INPUT",
+    "message": "Validation failed",
     "details": {
-      "email": "Invalid email format",
-      "password": "Password must be at least 12 characters",
-      "name": "Name is required"
+      "fields": [
+        { "field": "email", "message": "Invalid email format" },
+        { "field": "password", "message": "Must be at least 12 characters" },
+        { "field": "name", "message": "Required field" }
+      ]
     },
     "trace_id": "abc123def456",
     "timestamp": "2024-01-20T10:30:00Z"
@@ -223,7 +227,7 @@ curl -X POST https://api.yourproject.com/v1/auth/login \
 ```json
 {
   "error": {
-    "code": "invalid_credentials",
+    "code": "AUTH_INVALID_CREDENTIALS",
     "message": "Invalid email or password",
     "trace_id": "def456ghi789",
     "timestamp": "2024-01-20T10:30:00Z"
@@ -249,9 +253,13 @@ Retry-After: 300
 
 {
   "error": {
-    "code": "rate_limit_exceeded",
-    "message": "Too many login attempts. Try again in 5 minutes.",
-    "retry_after": 300,
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Too many requests",
+    "details": {
+      "retryAfter": 300,
+      "limit": 5,
+      "remaining": 0
+    },
     "trace_id": "ghi789jkl012",
     "timestamp": "2024-01-20T10:30:00Z"
   }
@@ -676,14 +684,16 @@ func main() {
 
 ## Testing Examples
 
+> **Note**: These test scripts use placeholder credentials. For actual testing, use environment variables: `EMAIL="${TEST_EMAIL}"` and `PASSWORD="${TEST_PASSWORD}"`.
+
 ### API Testing with curl
 ```bash
 #!/bin/bash
 
 # Test script for API endpoints
-BASE_URL="https://api.yourproject.com/v1"
-EMAIL="test@example.com"
-PASSWORD="TestPassword123!"
+BASE_URL="${API_BASE_URL:-https://api.yourproject.com/v1}"
+EMAIL="${TEST_EMAIL:-test@example.com}"
+PASSWORD="${TEST_PASSWORD:-TestPassword123!}"
 
 echo "=== API Test Suite ==="
 

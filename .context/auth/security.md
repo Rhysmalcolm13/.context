@@ -94,39 +94,39 @@ func NewPasswordPolicy() *PasswordPolicy {
 func (p *PasswordPolicy) Validate(password string) error {
     if len(password) < p.MinLength {
         return &ValidationError{
-            Code:    "password_too_short",
+            Code:    "VAL_INVALID_INPUT",
             Message: fmt.Sprintf("Password must be at least %d characters", p.MinLength),
         }
     }
-    
+
     if p.RequireUppercase && !regexp.MustCompile(`[A-Z]`).MatchString(password) {
         return &ValidationError{
-            Code:    "password_missing_uppercase",
+            Code:    "VAL_INVALID_INPUT",
             Message: "Password must contain at least one uppercase letter",
         }
     }
-    
+
     if p.RequireLowercase && !regexp.MustCompile(`[a-z]`).MatchString(password) {
         return &ValidationError{
-            Code:    "password_missing_lowercase",
+            Code:    "VAL_INVALID_INPUT",
             Message: "Password must contain at least one lowercase letter",
         }
     }
-    
+
     if p.RequireNumbers && !regexp.MustCompile(`\d`).MatchString(password) {
         return &ValidationError{
-            Code:    "password_missing_numbers",
+            Code:    "VAL_INVALID_INPUT",
             Message: "Password must contain at least one number",
         }
     }
-    
+
     if p.RequireSymbols && !regexp.MustCompile(`[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]`).MatchString(password) {
         return &ValidationError{
-            Code:    "password_missing_symbols",
+            Code:    "VAL_INVALID_INPUT",
             Message: "Password must contain at least one special character",
         }
     }
-    
+
     return nil
 }
 
@@ -182,7 +182,7 @@ func (rl *AuthRateLimiter) AllowLogin(ip, email string) error {
     // Check IP-based rate limiting
     if !rl.loginAttempts.Allow() {
         return &RateLimitError{
-            Code:    "ip_rate_limit_exceeded",
+            Code:    "RATE_LIMIT_EXCEEDED",
             Message: "Too many login attempts from this IP address",
             RetryAfter: time.Minute,
         }
@@ -195,7 +195,7 @@ func (rl *AuthRateLimiter) AllowLogin(ip, email string) error {
     
     if exists && time.Now().Before(lockout.LockedUntil) {
         return &RateLimitError{
-            Code:    "account_locked",
+            Code:    "AUTH_ACCOUNT_LOCKED",
             Message: "Account temporarily locked due to too many failed attempts",
             RetryAfter: time.Until(lockout.LockedUntil),
         }
@@ -361,49 +361,49 @@ func NewAuthInputSanitizer() *AuthInputSanitizer {
 func (s *AuthInputSanitizer) SanitizeEmail(email string) (string, error) {
     // Normalize email
     email = strings.ToLower(strings.TrimSpace(email))
-    
+
     // Validate format
     if !s.emailRegex.MatchString(email) {
         return "", &ValidationError{
-            Code:    "invalid_email_format",
+            Code:    "VAL_INVALID_FORMAT",
             Message: "Invalid email format",
         }
     }
-    
+
     // Check length limits
     if len(email) > 254 {
         return "", &ValidationError{
-            Code:    "email_too_long",
+            Code:    "VAL_OUT_OF_RANGE",
             Message: "Email address too long",
         }
     }
-    
+
     // Additional security checks
     if strings.Contains(email, "..") {
         return "", &ValidationError{
-            Code:    "invalid_email_format",
+            Code:    "VAL_INVALID_FORMAT",
             Message: "Invalid email format",
         }
     }
-    
+
     return email, nil
 }
 
 func (s *AuthInputSanitizer) SanitizeName(name string) (string, error) {
     // Trim whitespace
     name = strings.TrimSpace(name)
-    
+
     // Check length
     if len(name) < 1 || len(name) > 100 {
         return "", &ValidationError{
-            Code:    "invalid_name_length",
+            Code:    "VAL_OUT_OF_RANGE",
             Message: "Name must be between 1 and 100 characters",
         }
     }
-    
+
     // Remove potentially dangerous characters
     name = regexp.MustCompile(`[<>\"'&]`).ReplaceAllString(name, "")
-    
+
     return name, nil
 }
 ```

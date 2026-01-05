@@ -254,4 +254,16 @@ var (
 
 ---
 
+## Related Documentation
+
+| Document | Relationship |
+|----------|--------------|
+| [dependencies.md](./dependencies.md) | Dependency injection patterns |
+| [patterns.md](./patterns.md) | Coding conventions and patterns |
+| [../auth/overview.md](../auth/overview.md) | Authentication layer implementation |
+| [../api/endpoints.md](../api/endpoints.md) | API layer documentation |
+| [../database/schema.md](../database/schema.md) | Data layer schema |
+| [../decisions/002-repository-pattern.md](../decisions/002-repository-pattern.md) | ADR for repository pattern |
+| [../errors.md](../errors.md) | Error codes used in domain errors |
+
 **Next**: Review [dependencies.md](./dependencies.md) for dependency injection patterns and [patterns.md](./patterns.md) for coding conventions.

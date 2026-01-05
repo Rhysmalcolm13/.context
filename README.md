@@ -10,13 +10,13 @@ A complete "Documentation as Code as Context" template implementing the Substrat
 
 ## What is the Substrate Methodology?
 
-The Substrate Methodology solves the critical problem of outdated documentation and AI hallucinations by creating a structured, domain-organized documentation system in a `.context/` directory. This approach:
+The Substrate Methodology addresses the problem of outdated documentation and AI hallucinations by creating a structured, domain-organized documentation system in a `.context/` directory. This approach:
 
-- **Eliminates documentation drift** through Git-native versioning
-- **Reduces AI hallucinations** with structured context
-- **Accelerates onboarding** with comprehensive domain knowledge
+- **Reduces documentation drift** by keeping docs in Git alongside code
+- **Provides context that reduces AI hallucinations** through structured, project-specific information
+- **Supports faster onboarding** with comprehensive domain knowledge
 - **Captures decision history** for future reference
-- **Scales development teams** with consistent patterns
+- **Helps teams scale** with consistent, documented patterns
 
 ## Quick Start
 
@@ -169,6 +169,78 @@ AI tools need to know your `.context/` folder exists and how to use it. This is 
 ```
 
 Both files point to the same `.context/` documentation. They're just different bridges for different tools.
+
+## FAQ
+
+### Why do I need `.context/` if I already have `CLAUDE.md` or `agents.md`?
+
+`CLAUDE.md` and `agents.md` are entry points, not the knowledge itself. They're like the table of contents in a book. The `.context/` folder is the actual book.
+
+Without `.context/`, your `CLAUDE.md` becomes a flat list of instructions with no depth. The AI reads "use JWT authentication" but has no reference for *your* JWT implementation, *your* token lifetimes, *your* refresh strategy, *your* error codes.
+
+The power is in the structured knowledge that lives in `.context/`. The entry point files just tell AI tools where to find it.
+
+### What is "crystallized knowledge" and why does it matter?
+
+When your team discusses architecture, debates patterns, and makes decisions, that knowledge exists as fluid conversation. It lives in Slack threads, meeting notes, pull request comments, and people's heads.
+
+**Crystallized knowledge** is that same information solidified into permanent, structured reference material. The `.context/` folder captures decisions *after* they've been made, patterns *after* they've been validated, and constraints *after* they've been learned the hard way.
+
+This matters because:
+- **Fluid knowledge disappears** when people leave or forget
+- **AI tools can't read Slack history** or attend your meetings
+- **New team members** can't absorb years of tribal knowledge
+- **Your future self** won't remember why that weird pattern exists
+
+Crystallizing knowledge into `.context/` makes it permanent, searchable, and AI-consumable.
+
+### Isn't this just markdown files? What makes it different?
+
+The files are markdown. The value is in the **structure and interconnection**.
+
+Consider the difference:
+- **Flat docs**: A single README with everything in one place
+- **Wiki-style**: Separate pages with no clear relationships
+- **Substrate**: Domain-organized, cross-referenced, with explicit hierarchies
+
+The `.context/` structure encodes relationships:
+- `auth/security.md` links to `architecture/patterns.md` for error handling
+- `api/endpoints.md` references `database/models.md` for validation rules
+- `decisions/001-jwt.md` explains why `auth/overview.md` uses that approach
+
+AI tools follow these connections. When you ask about authentication, the AI doesn't just read one file. It traverses related context across domains. The structure *is* the intelligence.
+
+### How is this different from just good comments in code?
+
+Comments explain *what* code does. `.context/` explains:
+- **Why** the code exists (decision rationale)
+- **What else** relates to it (cross-domain connections)
+- **What not to do** (anti-patterns and boundaries)
+- **How it evolved** (decision history)
+
+Code comments are local. Substrate context is global. When AI generates new code, it needs to understand the whole system, not just the function it's modifying.
+
+### Does the AI actually use all these files?
+
+Not all at once. The methodology works through selective loading:
+
+1. **Entry point** (`CLAUDE.md` / `agents.md`) tells AI where context lives
+2. **Task determines scope**: Auth work? Load `auth/*.md`. API work? Load `api/*.md`
+3. **Cross-references expand context**: If `auth/security.md` mentions password hashing, AI knows to check related patterns
+4. **AI builds mental model**: The interconnected structure helps AI reason about your system holistically
+
+The files are modular by design. You don't dump everything into context. You load what's relevant, and the structure helps AI find related information.
+
+### Why not just let AI figure out my codebase by reading the source?
+
+AI *can* read source code. But code tells you *what* exists, not:
+- Why it was built that way
+- What alternatives were rejected
+- What constraints shaped the design
+- What patterns must be followed for new code
+- What mistakes have been made before
+
+Source code is implementation. `.context/` is intent, rationale, and institutional knowledge. Both are needed for AI to generate code that actually fits your project.
 
 ## Hot Tip: Iterate on Your .context
 
