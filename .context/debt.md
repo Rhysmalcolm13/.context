@@ -2,6 +2,8 @@
 
 This file documents known technical debt. It helps AI understand what shortcuts exist, why they were taken, and what the proper solution would be.
 
+> **Template Note**: The entries below are examples demonstrating the format. Replace them with your actual technical debt. File paths like `internal/api/handlers/` and `services/user/registration.go` are illustrative and should be updated to match your project structure.
+
 ## How to Use This File
 
 When generating code:

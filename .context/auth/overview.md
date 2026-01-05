@@ -91,27 +91,35 @@ func (s *authService) generateAccessToken(user *User) (string, error) {
 type RefreshToken struct {
     ID        string    `db:"id"`
     UserID    string    `db:"user_id"`
-    Token     string    `db:"token"`
+    TokenHash string    `db:"token_hash"`  // SHA-256 hash of the token
     ExpiresAt time.Time `db:"expires_at"`
     CreatedAt time.Time `db:"created_at"`
     RevokedAt *time.Time `db:"revoked_at"`
 }
 
-func (s *authService) generateRefreshToken(userID string) (*RefreshToken, error) {
+func (s *authService) generateRefreshToken(userID string) (plainToken string, *RefreshToken, error) {
     tokenBytes := make([]byte, 32)
     if _, err := rand.Read(tokenBytes); err != nil {
-        return nil, fmt.Errorf("generate random token: %w", err)
+        return "", nil, fmt.Errorf("generate random token: %w", err)
     }
-    
+
+    // Generate plaintext token (returned to client)
+    plainToken = base64.URLEncoding.EncodeToString(tokenBytes)
+
+    // Hash token for storage (never store plaintext)
+    hash := sha256.Sum256([]byte(plainToken))
+    tokenHash := hex.EncodeToString(hash[:])
+
     refreshToken := &RefreshToken{
         ID:        generateUUID(),
         UserID:    userID,
-        Token:     base64.URLEncoding.EncodeToString(tokenBytes),
+        TokenHash: tokenHash,
         ExpiresAt: time.Now().Add(7 * 24 * time.Hour),
         CreatedAt: time.Now(),
     }
-    
-    return s.tokenRepo.Create(context.Background(), refreshToken)
+
+    stored, err := s.tokenRepo.Create(context.Background(), refreshToken)
+    return plainToken, stored, err  // Return plainToken to send to client
 }
 ```
 

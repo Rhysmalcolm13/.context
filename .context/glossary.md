@@ -21,6 +21,18 @@ This file defines project-specific terminology. AI should use these terms consis
 | **DTO** | Data Transfer Object for API boundaries | Domain Model (internal representation) |
 | **Entity** | Domain object with identity and lifecycle | Value Object (identity-less) |
 
+### Naming Conventions
+
+| Layer | Type Suffix | Variable Suffix | Example |
+|-------|-------------|-----------------|---------|
+| HTTP/API | `Handler` | `handler` | `UserHandler`, `userHandler` |
+| Business Logic | `Service` | `service` | `AuthService`, `authService` |
+| Data Access | `Repository` | `repo` | `UserRepository`, `userRepo` |
+
+**Handler** receives HTTP requests, validates input, calls Service, formats response.
+**Service** contains business logic, orchestrates operations, enforces rules.
+**Repository** abstracts database operations, returns domain models.
+
 ## Project-Specific Terms
 
 | Term | Meaning in this project |

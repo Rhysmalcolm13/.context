@@ -15,8 +15,10 @@ Local:      http://localhost:8080/api/v1
 
 ### API Versioning
 - **Current Version**: v1
-- **Version Header**: `Accept: application/vnd.yourproject.v1+json`
-- **URL Versioning**: `/api/v1/` prefix for all endpoints
+- **Primary Method**: URL path versioning (`/api/v1/` prefix)
+- **Optional Header**: `Accept: application/vnd.yourproject.v1+json` (for content negotiation)
+
+> **Note**: URL versioning is the primary approach. The Accept header is optional and used for clients that need fine-grained content negotiation. If omitted, the URL version determines the API version.
 
 ## Authentication Endpoints
 
